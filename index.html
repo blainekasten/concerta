@@ -3,33 +3,42 @@
   <head>
     <title>Socket.IO chat</title>
     <style>
+      html, body { height: 100%; width: 100%; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+      div.wrapper { float: left; width: 50%; height: 50vh;  padding: 15px}
+      div[data-method] { background: blue; width: 100%; height: 100%; cursor: pointer; }
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <div class="wrapper"><div data-method="C" class="button"></div></div>
+    <div class="wrapper"><div data-method="D" class="button"></div></div>
+    <div class="wrapper"><div data-method="E" class="button"></div></div>
+    <div class="wrapper"><div data-method="F" class="button"></div></div>
+
+
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="http://wzrd.in/standalone/dom-delegate@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.js"></script>
+    <script src="/jspm_packages/system.js"></script>
     <script>
-      var socket = io();
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-      });
+      if ( /Mobi/.test(navigator.userAgent) ) FastClick.attach(document.body);
+      window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      window.gainNode = audioCtx.createGain();
+      gainNode.gain.value = 8
+      gainNode.connect(audioCtx.destination);
+
+
+      channels = 2;
+
+      // Create an empty two second stereo buffer at the
+      // sample rate of the AudioContext
+      var frameCount = audioCtx.sampleRate * 2.0;
+      myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);
+
+
+
+      System.import('app/main');
+
     </script>
   </body>
 </html>
